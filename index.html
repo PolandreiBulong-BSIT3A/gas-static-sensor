@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gas Sensor Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <style>
+        body { padding: 20px; background-color: #f8f9fa; }
+        .table-container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1 { margin-bottom: 20px; color: #333; }
+        .last-updated { font-size: 0.85rem; color: #6c757d; }
+        .nav-tabs { margin-bottom: 20px; }
+        .status-badge { font-size: 0.75rem; }
+        .sensor-value { font-weight: bold; }
+        .hidden { display: none; }
+        .team-member { text-align: center; margin-bottom: 20px; }
+        .team-photo { 
+            width: 150px; 
+            height: 150px; 
+            object-fit: cover; 
+            border-radius: 50%; 
+            margin-bottom: 10px;
+            border: 3px solid #0d6efd;
+        }
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gas Sensor Dashboard</h1>
+
+        <ul class="nav nav-tabs" id="mainTabs">
+            <li class="nav-item">
+                <a class="nav-link active" href="#" data-tab="all-sensors">All Sensors</a>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="#" data-tab="MQ135-sensor">MQ135</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" data-tab="MQ2-sensor">MQ2</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" data-tab="MQ4-sensor">MQ4</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" data-tab="MQ5-sensor">MQ5</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" data-tab="about-us">About Us</a></li>
+        </ul>
+
+        <div class="table-container">
+            <!-- All Sensors Table -->
+            <div id="all-sensors">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Sensor</th>
+                            <th>Type</th>
+                            <th>Current Value</th>
+                            <th>Status</th>
+                            <th>Last Updated</th>
+                        </tr>
+                    </thead>
+                    <tbody id="all-sensors-body">
+                        <!-- Data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Individual Sensor Tables -->
+            <div id="MQ135-sensor" class="hidden">
+                <h3>MQ135 - Air Quality</h3>
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Value</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mq135-body">
+                        <!-- Data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="MQ2-sensor" class="hidden">
+                <h3>MQ2 - Smoke</h3>
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Value</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mq2-body">
+                        <!-- Data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="MQ4-sensor" class="hidden">
+                <h3>MQ4 - Methane</h3>
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Value</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mq4-body">
+                        <!-- Data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="MQ5-sensor" class="hidden">
+                <h3>MQ5 - LPG</h3>
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Value</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mq5-body">
+                        <!-- Data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- About Us Section -->
+            <div id="about-us" class="hidden">
+                <h2>Our Team</h2>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <img src="images/team/pic1.png" class="team-photo" alt="Pol Andrei L. Bulong">
+                        <h3>POL ANDREI L. BULONG</h3>
+                        <p class="text-primary">TEAM LEADER</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="images/team/pic2.png" class="team-photo" alt="John Michael Giong-an">
+                        <h3>JOHN MICHAEL GIONG-AN</h3>
+                        <p class="text-primary">MEMBER 1</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="images/team/pic3.png" class="team-photo" alt="Jayser Joy M. Marquez">
+                        <h3>JAYSER JOY M. MARQUEZ</h3>
+                        <p class="text-primary">MEMBER 2</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="images/team/j.jpg" class="team-photo" alt="Jessie Garde">
+                        <h3>JESSIE GARDE</h3>
+                        <p class="text-primary">MEMBER 3</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzW62YtqGCqDr_giIlbvE8-6pPFM3Wx30",
+            authDomain: "gas-sensor-data-8a621.firebaseapp.com",
+            databaseURL: "https://gas-sensor-data-8a621-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "gas-sensor-data-8a621",
+            storageBucket: "gas-sensor-data-8a621.appspot.com",
+            messagingSenderId: "319294555677",
+            appId: "1:319294555677:web:13a140f8109014a5a3a8f4"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // Tab Navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabLinks = document.querySelectorAll('#mainTabs .nav-link');
+            const allSections = document.querySelectorAll('.table-container > div');
+
+            tabLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    tabLinks.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    allSections.forEach(section => section.classList.add('hidden'));
+                    document.getElementById(this.dataset.tab).classList.remove('hidden');
+                });
+            });
+
+            // Load initial data
+            fetchSensorData();
+        });
+
+        // Fetch and display sensor data
+        function fetchSensorData() {
+            db.ref('Main').on('value', (snapshot) => {
+                const data = snapshot.val();
+                console.log("Data received:", data);
+                if (data) {
+                    updateAllSensors(data);
+                    updateIndividualSensors(data);
+                }
+            });
+        }
+
+        function updateAllSensors(data) {
+            const tbody = document.querySelector('#all-sensors-body');
+            tbody.innerHTML = '';
+            
+            const sensorTypes = {
+                'MQ135': 'Air Quality',
+                'MQ2': 'Smoke',
+                'MQ4': 'Methane',
+                'MQ5': 'LPG'
+            };
+
+            for (const [sensorId, sensorData] of Object.entries(data)) {
+                // Get the most recent reading
+                const timestamps = Object.keys(sensorData);
+                if (timestamps.length === 0) continue;
+                
+                const latestTimestamp = timestamps[timestamps.length - 1];
+                const latestValue = sensorData[latestTimestamp].value;
+                
+                const value = latestValue !== undefined ? 
+                    `${latestValue} ppm` : '--';
+                
+                const status = latestValue !== undefined ? 'ACTIVE' : 'OFFLINE';
+                const badgeClass = status === 'ACTIVE' ? 'bg-success' : 'bg-danger';
+                
+                const lastUpdated = latestTimestamp ? 
+                    formatTimestamp(latestTimestamp) : 'N/A';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${sensorId}</td>
+                        <td>${sensorTypes[sensorId] || 'Unknown'}</td>
+                        <td class="sensor-value">${value}</td>
+                        <td><span class="badge rounded-pill ${badgeClass} status-badge">${status}</span></td>
+                        <td><span class="last-updated">${lastUpdated}</span></td>
+                    </tr>
+                `;
+            }
+        }
+
+        function updateIndividualSensors(data) {
+            const sensorMap = {
+                'MQ135': 'mq135-body',
+                'MQ2': 'mq2-body',
+                'MQ4': 'mq4-body',
+                'MQ5': 'mq5-body'
+            };
+
+            for (const [sensor, readings] of Object.entries(data)) {
+                const tbody = document.getElementById(sensorMap[sensor]);
+                if (!tbody) continue;
+
+                tbody.innerHTML = '';
+                
+                // Get all timestamps and sort them (newest first)
+                const timestamps = Object.keys(readings).sort((a, b) => {
+                    return new Date(b.replace('_', ' ')) - new Date(a.replace('_', ' '));
+                });
+
+                // Show only the 10 most recent readings
+                const recentReadings = timestamps.slice(0, 10);
+
+                for (const timestamp of recentReadings) {
+                    const reading = readings[timestamp];
+                    const row = document.createElement('tr');
+
+                    const timestampCell = document.createElement('td');
+                    timestampCell.textContent = formatTimestamp(timestamp);
+
+                    const valueCell = document.createElement('td');
+                    valueCell.classList.add('sensor-value');
+                    valueCell.textContent = `${reading.value} ppm`;
+
+                    const statusCell = document.createElement('td');
+                    statusCell.innerHTML = '<span class="badge rounded-pill bg-success status-badge">RECORDED</span>';
+
+                    row.appendChild(timestampCell);
+                    row.appendChild(valueCell);
+                    row.appendChild(statusCell);
+                    tbody.appendChild(row);
+                }
+            }
+        }
+
+        // Helper function to format timestamp (2024-01-01_00:00:05 -> Jan 1, 2024, 12:00:05 AM)
+        function formatTimestamp(timestampStr) {
+            if (!timestampStr) return 'N/A';
+            try {
+                const dateStr = timestampStr.replace('_', ' ');
+                const date = new Date(dateStr);
+                return date.toLocaleString();
+            } catch (e) {
+                console.warn("Failed to format timestamp:", timestampStr);
+                return timestampStr;
+            }
+        }
+    </script>
+</body>
+</html>
